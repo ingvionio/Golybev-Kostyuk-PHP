@@ -6,6 +6,6 @@ class App
 {
     public function run(): string
     {
-        return 'It`s a life!';
+        return 'Hello, World!';
     }
 }

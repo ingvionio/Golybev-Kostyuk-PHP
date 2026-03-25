@@ -5,7 +5,7 @@ use App\Http\Controllers\WishController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FriendshipController;
-
+use App\Http\Controllers\ErrorReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,4 +41,6 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';    
+require __DIR__.'/auth.php';
+
+Route::post('/error-report', [ErrorReportController::class, 'store'])->name('error.report');

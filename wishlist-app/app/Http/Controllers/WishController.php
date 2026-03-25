@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Wish;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class WishController extends Controller
 {
+    use AuthorizesRequests;
     public function index() {
         $wishes = (auth()->user()->role === 'user') 
             ? auth()->user()->wishes 

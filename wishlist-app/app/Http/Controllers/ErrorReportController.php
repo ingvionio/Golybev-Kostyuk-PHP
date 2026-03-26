@@ -11,15 +11,22 @@ class ErrorReportController extends Controller
     {
         $request->validate([
             'user_comment' => 'required|string|max:1000',
-            'error_message' => 'nullable|string'
+            'error_message' => 'nullable|string',
+            'screenshot' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
+
+        $filePath = null;
+        if ($request->hasFile('screenshot')) {
+            $filePath = $request->file('screenshot')->store('errors', 'public');
+        }
 
         ErrorReport::create([
-            'user_id' => auth()->id(), // null, если отправляет гость
+            'user_id' => auth()->id(),
             'error_message' => $request->error_message,
             'user_comment' => $request->user_comment,
+            'file_path' => $filePath,
         ]);
 
-        return back()->with('success', 'Отчет об ошибке успешно отправлен. Мы скоро все починим!');
+        return back()->with('success', 'Отчет отправлен. Мы скоро все починим!');
     }
 }

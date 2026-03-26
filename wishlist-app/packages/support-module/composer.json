@@ -1,0 +1,10 @@
+{
+    "name": "local/support-module",
+    "description": "Модуль для управления отчетами об ошибках",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "SupportModule\\": "src/"
+        }
+    }
+}

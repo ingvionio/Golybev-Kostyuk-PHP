@@ -13,6 +13,12 @@
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/support-module"
+        }
+    ],
     "require-dev": {
         "fakerphp/faker": "^1.23",
         "laravel/breeze": "^2.4",

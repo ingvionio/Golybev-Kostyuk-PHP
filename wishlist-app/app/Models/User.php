@@ -35,4 +35,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function friendships()
+    {
+        return $this->hasMany(Friendship::class);
+    }
+
+    public function friends()
+    {
+        return $this->hasMany(Friendship::class)
+            ->where('status', 'accepted');
+    }
 }

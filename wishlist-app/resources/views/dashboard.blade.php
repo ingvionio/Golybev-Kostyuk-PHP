@@ -70,7 +70,34 @@
                     <p class="text-gray-500">Список пуст. Добавьте первое желание!</p>
                 @endforelse
             </div>
-
+            {{-- Мои обращения --}}
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Мои обращения в поддержку</h3>
+                
+                <div class="space-y-4">
+                    @forelse($reports as $report)
+                        <div class="border-b pb-4 last:border-0 last:pb-0">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-sm text-gray-500">{{ $report->created_at->format('d.m.Y H:i') }}</span>
+                                <span class="text-xs px-2 py-1 rounded {{ $report->status === 'resolved' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
+                                    {{ $report->status === 'resolved' ? 'Решено' : 'В ожидании' }}
+                                </span>
+                            </div>
+                            
+                            <p class="font-medium text-gray-800 mb-2">{{ $report->user_comment }}</p>
+                            
+                            @if($report->status === 'resolved')
+                                <div class="bg-blue-50 border-l-4 border-blue-400 p-3 mt-2 rounded-r">
+                                    <p class="text-xs font-bold text-blue-800 uppercase mb-1">Ответ поддержки:</p>
+                                    <p class="text-sm text-blue-900">{{ $report->admin_reply }}</p>
+                                </div>
+                            @endif
+                        </div>
+                    @empty
+                        <p class="text-gray-500 text-sm">Вы еще не отправляли отчеты об ошибках.</p>
+                    @endforelse
+                </div>
+            </div>
         </div>
     </div>
 </x-app-layout>

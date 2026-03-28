@@ -12,7 +12,7 @@ class ErrorReportController extends Controller
         $request->validate([
             'user_comment' => 'required|string|max:1000',
             'error_message' => 'nullable|string',
-            'screenshot' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+            'screenshot' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120'
         ]);
 
         $filePath = null;
@@ -27,6 +27,11 @@ class ErrorReportController extends Controller
             'file_path' => $filePath,
         ]);
 
-        return back()->with('success', 'Отчет отправлен. Мы скоро все починим!');
+        // Если юзер авторизован - кидаем в ЛК, если гость - на главную
+        if (auth()->check()) {
+            return redirect()->route('dashboard')->with('success', 'Отчет об ошибке успешно отправлен!');
+        }
+        
+        return redirect('/')->with('success', 'Отчет об ошибке успешно отправлен!');
     }
 }

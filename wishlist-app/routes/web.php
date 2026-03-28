@@ -45,3 +45,6 @@ Route::middleware(['auth'])->group(function () {
 require __DIR__.'/auth.php';
 
 Route::post('/error-report', [ErrorReportController::class, 'store'])->name('error.report');
+Route::fallback(function () {
+    abort(404);
+});

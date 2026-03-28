@@ -30,6 +30,17 @@
                 @csrf
                 <input type="hidden" name="error_message" value="{{ $exception->getMessage() ?: 'Без описания' }}">
                 
+                {{-- БЛОК С ОШИБКАМИ ВАЛИДАЦИИ --}}
+                @if (isset($errors) && $errors->any())
+                    <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
+                        <ul class="list-disc pl-5">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                
                 <label class="block text-sm font-medium text-gray-700 mb-2">Опишите, что вы делали:</label>
                 <textarea name="user_comment" rows="3" class="w-full border-gray-300 rounded-md shadow-sm mb-4" required></textarea>
                 

@@ -37,7 +37,7 @@ class WishPolicy
      */
     public function update(User $user, Wish $wish): bool
     {
-        return false;
+        return $user->id === $wish->user_id;
     }
 
     /**

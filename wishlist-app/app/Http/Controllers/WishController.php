@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Wish;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Storage;
+    
 class WishController extends Controller
 {
     use AuthorizesRequests;
@@ -18,16 +19,64 @@ class WishController extends Controller
         return view('dashboard', compact('wishes'));
     }
 
-    public function store(Request $request) {
-        $request->validate(['title' => 'required|string|max:255']);
-        auth()->user()->wishes()->create($request->all());
-        return back();
+    public function store(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'link' => 'nullable|url',
+            'is_private' => 'boolean',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $data = $request->except('image');
+        $data['is_private'] = $request->has('is_private');
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('wishes', 'public');
+            $data['image'] = $path;
+        }
+
+        auth()->user()->wishes()->create($data);
+        return back()->with('success', 'Желание добавлено!');
     }
 
     public function destroy(Wish $wish) {
         $this->authorize('delete', $wish);
         $wish->delete();
         return back();
+    }
+
+    public function edit(Wish $wish)
+    {
+        $this->authorize('update', $wish);
+        return view('wishes.edit', compact('wish'));
+    }
+
+    public function update(Request $request, Wish $wish)
+    {
+        $this->authorize('update', $wish);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'link' => 'nullable|url',
+            'is_private' => 'boolean',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $data = $request->except('image');
+        $data['is_private'] = $request->has('is_private');
+
+        if ($request->hasFile('image')) {
+            if ($wish->image) {
+                Storage::disk('public')->delete($wish->image);
+            }
+            $data['image'] = $request->file('image')->store('wishes', 'public');
+        }
+
+        $wish->update($data);
+        return redirect()->route('dashboard')->with('success', 'Желание обновлено!');
     }
 
     // Взять желание на исполнение
@@ -51,5 +100,16 @@ class WishController extends Controller
     {
         $wishes = $user->wishes()->latest()->get();
         return view('wishes.show', compact('user', 'wishes'));
+    }
+
+    public function public()
+    {
+        $wishes = Wish::where('is_private', false)
+            ->where('status', 'open')
+            ->with('user')
+            ->latest()
+            ->get();
+
+        return view('wishes.public', compact('wishes'));
     }
 }

@@ -13,7 +13,10 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                        Мои желания
+                    </x-nav-link>
+                    <x-nav-link :href="route('wishes.public')" :active="request()->routeIs('wishes.public')">
+                        Публичные желания
                     </x-nav-link>
                     <x-nav-link :href="route('friends.index')" :active="request()->routeIs('friends.*')">
                         Друзья

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Wish extends Model
 {
-    protected $fillable = ['title', 'link', 'user_id', 'status', 'reserved_by'];
+    protected $fillable = ['title', 'link', 'user_id', 'status', 'reserved_by', 'description', 'is_private', 'image']; 
 
     public function user()
     {

@@ -39,6 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['can:admin-access'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
         Route::post('/admin/reports/{id}/reply', [AdminController::class, 'replyToReport'])->name('admin.report.reply');
+        Route::patch('/admin/users/{user}/role', [AdminController::class, 'updateRole'])->name('admin.users.role');
     });
 });
 

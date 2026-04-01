@@ -31,4 +31,16 @@ class AdminController extends Controller
 
         return back()->with('success', 'Ответ на отчет успешно отправлен.');
     }
+
+    // Метод для изменения роли пользователя
+    public function updateRole(Request $request, User $user)
+    {
+        $request->validate([
+            'role' => 'required|string|in:user,editor,admin'
+        ]);
+
+        $user->update(['role' => $request->role]);
+
+        return back()->with('success', "Роль пользователя {$user->name} обновлена!");
+    }
 }

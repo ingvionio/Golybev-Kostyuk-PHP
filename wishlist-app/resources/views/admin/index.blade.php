@@ -25,11 +25,14 @@
                                 <td class="py-2">{{ $user->name }}</td>
                                 <td class="py-2">{{ $user->email }}</td>
                                 <td class="py-2">
-                                    <span class="px-2 py-1 rounded text-xs font-bold 
-                                        {{ $user->role->value === 'admin' ? 'bg-red-100 text-red-700' : 
-                                           ($user->role->value === 'editor' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700') }}">
-                                        {{ strtoupper($user->role->value) }}
-                                    </span>
+                                    <form action="{{ route('admin.users.role', $user) }}" method="POST">
+                                        @csrf @method('PATCH')
+                                        <select name="role" onchange="this.form.submit()" class="text-xs border-gray-300 rounded py-1 pl-2 pr-6 {{ $user->role->value === 'admin' ? 'bg-red-50 text-red-700' : ($user->role->value === 'editor' ? 'bg-blue-50 text-blue-700' : 'bg-gray-50 text-gray-700') }}">
+                                            <option value="user" {{ $user->role->value === 'user' ? 'selected' : '' }}>USER</option>
+                                            <option value="editor" {{ $user->role->value === 'editor' ? 'selected' : '' }}>EDITOR</option>
+                                            <option value="admin" {{ $user->role->value === 'admin' ? 'selected' : '' }}>ADMIN</option>
+                                        </select>
+                                    </form>
                                 </td>
                                 <td class="py-2">{{ $user->created_at->format('d.m.Y') }}</td>
                             </tr>

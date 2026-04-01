@@ -5,7 +5,7 @@ use App\Http\Controllers\WishController;
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FriendshipController;
-
+use App\Http\Controllers\ErrorReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,7 +38,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['can:admin-access'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::post('/admin/reports/{id}/reply', [AdminController::class, 'replyToReport'])->name('admin.report.reply');
+        Route::patch('/admin/users/{user}/role', [AdminController::class, 'updateRole'])->name('admin.users.role');
     });
 });
 
-require __DIR__.'/auth.php';    
+require __DIR__.'/auth.php';
+
+Route::post('/error-report', [ErrorReportController::class, 'store'])->name('error.report');
+Route::fallback(function () {
+    abort(404);
+});

@@ -13,16 +13,20 @@ class WishController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index() {
+    public function index() 
+    {
         $user = auth()->user();
 
-        if ($user->role === Role::USER) {
+        if ($user->role === \App\Enums\Role::USER) {
             $wishes = $user->wishes()->latest()->get();
         } else {
             $wishes = Wish::with('user')->latest()->get();
         }
 
-        return view('dashboard', compact('wishes'));
+        // Получаем отчеты текущего пользователя
+        $reports = \App\Models\ErrorReport::where('user_id', $user->id)->latest()->get();
+
+        return view('dashboard', compact('wishes', 'reports'));
     }
 
     public function store(Request $request)

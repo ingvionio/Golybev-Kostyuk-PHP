@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use App\Models\Wish;
+use App\Enums\Role;
 use Illuminate\Auth\Access\Response;
 
 class WishPolicy
@@ -43,9 +44,10 @@ class WishPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Wish $wish): bool
-    {
-        return $user->role === 'admin' || $user->id === $wish->user_id;
+    public function delete(User $user, Wish $wish): bool {
+        return $user->id === $wish->user_id || 
+               $user->role === Role::EDITOR || 
+               $user->role === Role::ADMIN;
     }
 
     /**

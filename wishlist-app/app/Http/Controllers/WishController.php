@@ -4,17 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Wish;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\User;
+use App\Enums\Role;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
     
 class WishController extends Controller
 {
     use AuthorizesRequests;
+
     public function index() {
-        $wishes = (auth()->user()->role === 'user') 
-            ? auth()->user()->wishes 
-            : Wish::with('user')->get();
+        $user = auth()->user();
+
+        if ($user->role === Role::USER) {
+            $wishes = $user->wishes()->latest()->get();
+        } else {
+            $wishes = Wish::with('user')->latest()->get();
+        }
 
         return view('dashboard', compact('wishes'));
     }
@@ -43,6 +49,11 @@ class WishController extends Controller
 
     public function destroy(Wish $wish) {
         $this->authorize('delete', $wish);
+        
+        if ($wish->image) {
+            Storage::disk('public')->delete($wish->image);
+        }
+
         $wish->delete();
         return back();
     }
@@ -79,7 +90,6 @@ class WishController extends Controller
         return redirect()->route('dashboard')->with('success', 'Желание обновлено!');
     }
 
-    // Взять желание на исполнение
     public function reserve(Wish $wish)
     {
         $wish->update([
@@ -89,7 +99,6 @@ class WishController extends Controller
         return back()->with('success', 'Вы взяли желание на исполнение!');
     }
 
-    // Исполнить желание
     public function fulfill(Wish $wish)
     {
         $wish->update(['status' => 'fulfilled']);

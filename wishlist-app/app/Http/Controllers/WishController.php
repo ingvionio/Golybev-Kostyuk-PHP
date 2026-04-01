@@ -17,11 +17,7 @@ class WishController extends Controller
     {
         $user = auth()->user();
 
-        if ($user->role === \App\Enums\Role::USER) {
-            $wishes = $user->wishes()->latest()->get();
-        } else {
-            $wishes = Wish::with('user')->latest()->get();
-        }
+        $wishes = $user->wishes()->latest()->get();
 
         // Получаем отчеты текущего пользователя
         $reports = \App\Models\ErrorReport::where('user_id', $user->id)->latest()->get();
@@ -111,7 +107,22 @@ class WishController extends Controller
     
     public function show(User $user)
     {
-        $wishes = $user->wishes()->latest()->get();
+        // Проверяем, являются ли пользователи друзьями
+        $isFriend = \App\Models\Friendship::where('status', 'accepted')
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', auth()->id())->where('friend_id', $user->id)
+                      ->orWhere('user_id', $user->id)->where('friend_id', auth()->id());
+            })->exists();
+
+        $query = $user->wishes()->latest();
+
+        // Если это не наш профиль, мы не друзья и мы не админ -> скрываем приватные желания
+        if (!$isFriend && auth()->id() !== $user->id && auth()->user()->role !== \App\Enums\Role::ADMIN) {
+            $query->where('is_private', false);
+        }
+
+        $wishes = $query->get();
+
         return view('wishes.show', compact('user', 'wishes'));
     }
 

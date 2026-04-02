@@ -85,7 +85,14 @@
                             </div>
                             
                             <p class="font-medium text-gray-800 mb-2">{{ $report->user_comment }}</p>
-                            
+                            @if($report->file_path)
+                                <div class="mb-3">
+                                    <p class="text-xs text-gray-500 mb-1">Прикрепленный файл:</p>
+                                    <a href="{{ Storage::url($report->file_path) }}" target="_blank" class="inline-block">
+                                        <img src="{{ Storage::url($report->file_path) }}" alt="Скриншот" class="h-20 w-auto rounded border border-gray-200 shadow-sm hover:opacity-75 transition">
+                                    </a>
+                                </div>
+                            @endif
                             @if($report->status === 'resolved')
                                 <div class="bg-blue-50 border-l-4 border-blue-400 p-3 mt-2 rounded-r">
                                     <p class="text-xs font-bold text-blue-800 uppercase mb-1">Ответ поддержки:</p>

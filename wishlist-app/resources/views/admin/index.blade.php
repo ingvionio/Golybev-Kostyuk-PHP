@@ -77,9 +77,12 @@
                     @endif
 
                     @if($report->file_path)
-                        <a href="{{ Storage::url($report->file_path) }}" target="_blank" class="text-blue-500 text-sm hover:underline block mb-3">
-                            📎 Посмотреть прикрепленный скриншот
-                        </a>
+                        <div class="mb-3">
+                            <p class="text-xs text-gray-500 mb-1">Прикрепленный файл:</p>
+                            <a href="{{ Storage::url($report->file_path) }}" target="_blank" class="inline-block">
+                                <img src="{{ Storage::url($report->file_path) }}" alt="Скриншот" class="h-24 w-auto rounded border border-gray-200 shadow-sm hover:opacity-75 transition">
+                            </a>
+                        </div>
                     @endif
 
                     @if($report->status === 'new')

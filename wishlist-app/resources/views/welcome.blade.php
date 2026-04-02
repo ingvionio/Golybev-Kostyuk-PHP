@@ -13,7 +13,7 @@
         <nav class="absolute top-0 right-0 p-6 flex items-center gap-4 z-20">
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ route('dashboard') }}" class="px-5 py-2 border-2 border-indigo-600 text-indigo-600 font-bold rounded-lg hover:bg-indigo-600 hover:text-white transition shadow-sm">
+                    <a href="{{ route('dashboard') }}" class="px-1.5 py-2 border-2 border-indigo-600 text-indigo-600 font-bold rounded-lg hover:bg-indigo-600 hover:text-white transition shadow-sm">
                         Личный кабинет
                     </a>
                     

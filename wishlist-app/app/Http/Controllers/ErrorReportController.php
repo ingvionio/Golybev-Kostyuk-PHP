@@ -20,12 +20,12 @@ class ErrorReportController extends Controller
             $filePath = $request->file('screenshot')->store('errors', 'public');
         }
 
-        ErrorReport::create([
-            'user_id' => auth()->id(),
-            'error_message' => $request->error_message,
-            'user_comment' => $request->user_comment,
-            'file_path' => $filePath,
-        ]);
+        $report = new ErrorReport();
+        $report->user_id = auth()->id();
+        $report->error_message = $request->error_message;
+        $report->user_comment = $request->user_comment;
+        $report->file_path = $filePath;
+        $report->save();
 
         // Если юзер авторизован - кидаем в ЛК, если гость - на главную
         if (auth()->check()) {
